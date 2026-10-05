@@ -1,0 +1,73 @@
+version: '3.8'
+
+networks:
+  trading_network:
+    driver: bridge
+
+volumes:
+  trading_signals_db:
+  postgres_data:
+
+services:
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - rust-app
+    networks:
+      - trading_network
+    environment:
+      - VITE_RUST_API_URL=http://localhost:8081
+      - VITE_SSE_URL=http://localhost:8089
+      - VITE_MSG_API_URL=http://localhost:8001
+      - VITE_TOKENIZER_API_URL=http://localhost:8002
+
+  rust-app:
+    build:
+      context: ../../app
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+      - "8089:8089"
+    volumes:
+      - trading_signals_db:/app/trading_signals.db
+    networks:
+      - trading_network
+
+  msg-ingestor:
+    build:
+      context: ../../MSG incoming
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    depends_on:
+      - postgres
+    networks:
+      - trading_network
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
+
+  tokenizer:
+    build:
+      context: ../../tokenizer
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8002"
+    networks:
+      - trading_network
+
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - trading_network

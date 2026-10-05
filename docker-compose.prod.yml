@@ -1,0 +1,22 @@
+version: '3.8'
+
+networks:
+  quant-network:
+    external: true
+
+services:
+  ui-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: quant-ui-dashboard
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - quant-network
+    environment:
+      - VITE_RUST_API_URL=http://quant-trading-api:8000
+      - VITE_SSE_URL=http://quant-trading-api:8000/events
+      - VITE_MSG_API_URL=http://msg_incoming_ingestor:8001
+      - VITE_TOKENIZER_API_URL=http://trading-tokenizer-api:8000
