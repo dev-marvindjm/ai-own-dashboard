@@ -43,30 +43,22 @@ export default function DashboardPage() {
           getQuantHealth().catch(() => ({ database: 'ok', active_broker_sessions: 2 })),
         ]);
         setStats(statsData);
-        setTrades(tradesData && tradesData.length > 0 ? tradesData : mockRecentRuns);
+        setTrades(Array.isArray(tradesData) ? tradesData : []);
         setHealthStatus(healthData);
       } catch {
         setStats({
-          total_trades: 1248,
-          wins: 986,
-          losses: 262,
-          win_rate: 79.0,
-          total_pnl: 18450.0,
-          avg_latency_ms: 38.2,
+          total_trades: 0,
+          wins: 0,
+          losses: 0,
+          win_rate: 0,
+          total_pnl: 0,
+          avg_latency_ms: 0,
         });
-        setTrades(mockRecentRuns);
+        setTrades([]);
       }
     }
     fetchData();
   }, []);
-
-  const mockRecentRuns = [
-    { name: 'Claims-Checker (EURUSD)', time: '2 min ago', latency: '28µs', status: 'Live' },
-    { name: 'KYC-Validator (GBPUSD)', time: '5 min ago', latency: '32µs', status: 'Live' },
-    { name: 'Fraud-Monitor (XAUUSD)', time: '2 min ago', latency: '24µs', status: 'Closed' },
-    { name: 'Swift-Analyzer (BTCUSDT)', time: '10 min ago', latency: '19µs', status: 'Live' },
-    { name: 'OTC-Binary-Router (USDJPY)', time: '14 min ago', latency: '22µs', status: 'Live' },
-  ];
 
   return (
     <div className="p-6 lg:p-8 space-y-6 max-w-[1700px] mx-auto select-none">
@@ -422,25 +414,39 @@ export default function DashboardPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-              {mockRecentRuns.map((r, i) => (
-                <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                  <td className="py-2.5 font-bold text-slate-800 dark:text-slate-200">{r.name}</td>
-                  <td className="py-2.5 text-slate-500 dark:text-slate-400 font-mono">{r.time}</td>
-                  <td className="py-2.5 font-mono text-slate-700 dark:text-slate-300">{r.latency}</td>
-                  <td className="py-2.5">
-                    <span
-                      className={cn(
-                        'text-[10px] font-bold px-2 py-0.5 rounded-full',
-                        r.status === 'Live'
-                          ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
-                          : 'bg-rose-50 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
-                      )}
-                    >
-                      {r.status}
-                    </span>
+              {trades.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="py-8 text-center text-slate-400 text-xs">
+                    No hay operaciones recientes registradas
                   </td>
                 </tr>
-              ))}
+              ) : (
+                trades.map((r, i) => (
+                  <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <td className="py-2.5 font-bold text-slate-800 dark:text-slate-200">
+                      {r.symbol || r.name || `Orden #${r.id}`}
+                    </td>
+                    <td className="py-2.5 text-slate-500 dark:text-slate-400 font-mono">
+                      {r.created_at ? new Date(r.created_at).toLocaleTimeString() : (r.time || '-')}
+                    </td>
+                    <td className="py-2.5 font-mono text-slate-700 dark:text-slate-300">
+                      {r.latency_ms ? `${r.latency_ms}ms` : (r.latency || '-')}
+                    </td>
+                    <td className="py-2.5">
+                      <span
+                        className={cn(
+                          'text-[10px] font-bold px-2 py-0.5 rounded-full',
+                          r.status === 'FILLED' || r.status === 'WON' || r.status === 'Live'
+                            ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                            : 'bg-rose-50 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+                        )}
+                      >
+                        {r.status || 'Pending'}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

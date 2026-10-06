@@ -5,8 +5,10 @@ const BASE_URL = '/api/quant';
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem('auth_token');
+  const apiKey = localStorage.getItem('quant_api_key') || 'quant_admin_initial_master_key';
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
+    'X-API-Key': apiKey,
     ...(options.headers as Record<string, string>),
   };
 
@@ -58,7 +60,13 @@ export const closeAllPositions = (accountId?: number) =>
   request<any>('/positions/close-all', { method: 'POST', body: JSON.stringify(accountId ? { account_id: accountId } : {}) });
 
 // Signals Engine
-export const getSignalsHistory = () => request<any[]>('/signals/history');
+export const getSignalsHistory = (params: { limit?: number; status?: string } = {}) => {
+  const query = new URLSearchParams();
+  if (params.limit) query.set('limit', String(params.limit));
+  if (params.status) query.set('status', params.status);
+  const qStr = query.toString();
+  return request<any[]>(`/signals/history${qStr ? `?${qStr}` : ''}`);
+};
 export const receiveSignal = (payload: any) => request<any>('/signals/receive', { method: 'POST', body: JSON.stringify(payload) });
 export const executeSignal = (payload: any) => request<any>('/signals/execute', { method: 'POST', body: JSON.stringify(payload) });
 

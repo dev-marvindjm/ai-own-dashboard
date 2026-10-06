@@ -88,316 +88,8 @@ export interface LiveOperationItem {
   attachmentsCount: number;
 }
 
-// Initial operations seeded with the real extracted data from trading_signals.db & quant_trading
-const SEED_OPERATIONS: LiveOperationItem[] = [
-  // 1. Incoming (Not Started) - Real signals received from Telegram
-  {
-    id: 'SIG-10954',
-    source: 'telegram',
-    senderName: 'Quotex FREE signals M5',
-    symbol: 'EURUSD_otc',
-    action: 'BUY',
-    entryPrice: 1.08520,
-    currentPrice: 1.08520,
-    durationSeconds: 60,
-    targetBroker: 'Pocket Option',
-    brokerAccount: 'pocketoption test',
-    templateId: 294,
-    templateName: 'Template #294 (Binary 1M Scalp)',
-    templateSyntax: '$(action) $(symbol) $(amount)',
-    stage: 'incoming',
-    rawText: 'BUY EURUSD 100',
-    timestamp: '15:22:10',
-    priority: 'High',
-    progressStep: 1,
-    totalSteps: 4,
-    commentsCount: 3,
-    attachmentsCount: 1,
-    amount: 100,
-    amountType: 'percentage',
-    galeStep: 0,
-    maxGale: 2,
-    galeMultiplier: 2.0,
-  },
-  {
-    id: 'SIG-10955',
-    source: 'telegram',
-    senderName: 'Señales GRATIS Quotex',
-    symbol: 'GBPJPY',
-    action: 'SELL',
-    entryPrice: 199.450,
-    currentPrice: 199.450,
-    durationSeconds: 60,
-    targetBroker: 'Pocket Option',
-    brokerAccount: 'pocketoption test',
-    templateId: 266,
-    templateName: 'Template #266 (Forex/Binary Break)',
-    templateSyntax: '$(action) $(symbol) $(amount)',
-    stage: 'incoming',
-    rawText: 'SELL GBPJPY 50',
-    timestamp: '15:21:40',
-    priority: 'Medium',
-    progressStep: 1,
-    totalSteps: 4,
-    commentsCount: 1,
-    attachmentsCount: 0,
-    amount: 50,
-    amountType: 'percentage',
-    galeStep: 0,
-    maxGale: 2,
-    galeMultiplier: 2.0,
-  },
-
-  // 2. Parsed & Routed (In Progress)
-  {
-    id: 'SIG-10956',
-    source: 'telegram',
-    senderName: 'Quotex FREE signals M5',
-    symbol: 'BTCUSDT',
-    action: 'CALL',
-    entryPrice: 94820.00,
-    currentPrice: 94820.00,
-    durationSeconds: 120,
-    targetBroker: 'Quotex',
-    brokerAccount: 'quotex test',
-    templateId: 293,
-    templateName: 'Template #293 (Crypto Alpha Call)',
-    templateSyntax: '$(action) $(symbol) $(amount)',
-    stage: 'parsed',
-    latencyMs: 18,
-    galeStep: 0,
-    maxGale: 2,
-    galeMultiplier: 2.0,
-    amount: 75,
-    amountType: 'percentage',
-    timestamp: '15:18:30',
-    priority: 'High',
-    progressStep: 2,
-    totalSteps: 4,
-    commentsCount: 4,
-    attachmentsCount: 1,
-    rawText: 'CALL BTCUSDT 75',
-  },
-  {
-    id: 'SIG-10957',
-    source: 'telegram',
-    senderName: 'Quotex FREE signals M5',
-    symbol: 'AAPL',
-    action: 'BUY',
-    entryPrice: 224.50,
-    currentPrice: 224.50,
-    durationSeconds: 300,
-    targetBroker: 'Pocket Option',
-    brokerAccount: 'pocketoption test',
-    templateId: 294,
-    templateName: 'Template #294 (Stocks Momentum)',
-    templateSyntax: '$(action) $(symbol) $(amount)',
-    stage: 'parsed',
-    latencyMs: 24,
-    galeStep: 0,
-    maxGale: 2,
-    galeMultiplier: 2.0,
-    amount: 120,
-    amountType: 'percentage',
-    timestamp: '15:16:15',
-    priority: 'Low',
-    progressStep: 2,
-    totalSteps: 4,
-    commentsCount: 2,
-    attachmentsCount: 0,
-    rawText: 'BUY AAPL 120',
-  },
-
-  // 3. OPERACIÓN EN CURSO (Under Review / Live In-Trade) - ACTIVE WITH EXPIRY COUNTDOWN
-  {
-    id: 'SIG-10958',
-    source: 'telegram',
-    senderName: 'Quotex FREE signals M5',
-    symbol: 'EURUSD_otc',
-    action: 'CALL',
-    entryPrice: 1.08510,
-    currentPrice: 1.08535,
-    durationSeconds: 60,
-    remainingSeconds: 38,
-    targetBroker: 'Pocket Option',
-    brokerAccount: 'pocketoption test',
-    templateId: 294,
-    templateName: 'Template #294 (Binary 1M Scalp)',
-    templateSyntax: '$(action) $(symbol) $(amount)',
-    stage: 'active',
-    pnl: 18.50,
-    amount: 25.00,
-    amountType: 'percentage',
-    latencyMs: 19,
-    galeStep: 0,
-    maxGale: 2,
-    galeMultiplier: 2.0,
-    timestamp: '15:12:00',
-    priority: 'High',
-    progressStep: 3,
-    totalSteps: 4,
-    commentsCount: 6,
-    attachmentsCount: 1,
-    rawText: 'CALL EURUSD 25 M1 GALE 2',
-  },
-  {
-    id: 'SIG-10959',
-    source: 'telegram',
-    senderName: 'VIP London FX',
-    symbol: 'XAUUSD',
-    action: 'BUY',
-    entryPrice: 2682.40,
-    currentPrice: 2687.10,
-    durationSeconds: 180,
-    remainingSeconds: 94,
-    targetBroker: 'MetaTrader 5',
-    brokerAccount: '90508108',
-    templateId: 283,
-    templateName: 'Template #283 (Gold Trend Breakout)',
-    templateSyntax: '$(symbol) $(action) $(entry_price) TP $(profit_price) SL $(stoploss)',
-    stage: 'active',
-    pnl: 47.00,
-    amount: 50.00,
-    amountType: 'fixed',
-    latencyMs: 27,
-    galeStep: 0,
-    maxGale: 1,
-    galeMultiplier: 1.5,
-    timestamp: '15:10:45',
-    priority: 'Medium',
-    progressStep: 3,
-    totalSteps: 4,
-    commentsCount: 3,
-    attachmentsCount: 1,
-    rawText: 'XAUUSD BUY 2682.40 TP 2695.00 SL 2675.00',
-  },
-  {
-    id: 'SIG-10960',
-    source: 'telegram',
-    senderName: 'Pocket Option Scalp',
-    symbol: 'AUDCAD_otc',
-    action: 'PUT',
-    entryPrice: 0.89240,
-    currentPrice: 0.89215,
-    durationSeconds: 120,
-    remainingSeconds: 52,
-    targetBroker: 'Pocket Option',
-    brokerAccount: 'pocketoption test',
-    templateId: 245,
-    templateName: 'Template #245 (OTC Reverse M2)',
-    templateSyntax: '$(action) $(symbol) $(amount)',
-    stage: 'active',
-    pnl: 21.25,
-    amount: 25.00,
-    amountType: 'percentage',
-    latencyMs: 31,
-    galeStep: 1,
-    maxGale: 2,
-    galeMultiplier: 2.0,
-    timestamp: '15:09:12',
-    priority: 'Low',
-    progressStep: 3,
-    totalSteps: 4,
-    commentsCount: 2,
-    attachmentsCount: 0,
-    rawText: 'PUT AUDCAD 25 M2 GALE 1',
-  },
-
-  // 4. Settled / Closed (Completed)
-  {
-    id: 'SIG-10950',
-    source: 'telegram',
-    senderName: 'Quotex FREE signals M5',
-    symbol: 'USDJPY',
-    action: 'CALL',
-    entryPrice: 154.200,
-    currentPrice: 154.285,
-    durationSeconds: 60,
-    targetBroker: 'Quotex',
-    brokerAccount: 'quotex test',
-    templateId: 293,
-    templateName: 'Template #293 (Binary Scalper M1)',
-    templateSyntax: '$(action) $(symbol) $(amount)',
-    stage: 'settled',
-    status: 'WIN',
-    pnl: 18.50,
-    amount: 20.00,
-    latencyMs: 22,
-    galeStep: 0,
-    maxGale: 2,
-    galeMultiplier: 2.0,
-    timestamp: '15:05:00',
-    priority: 'High',
-    progressStep: 4,
-    totalSteps: 4,
-    commentsCount: 5,
-    attachmentsCount: 2,
-    rawText: 'CALL USDJPY 20 M1',
-  },
-  {
-    id: 'SIG-10951',
-    source: 'telegram',
-    senderName: 'Señales GRATIS Quotex',
-    symbol: 'AUDCAD_otc',
-    action: 'PUT',
-    entryPrice: 0.89210,
-    currentPrice: 0.89240,
-    durationSeconds: 60,
-    targetBroker: 'Pocket Option',
-    brokerAccount: 'pocketoption test',
-    templateId: 266,
-    templateName: 'Template #266 (Turbo Binary)',
-    templateSyntax: '$(action) $(symbol) $(amount)',
-    stage: 'settled',
-    status: 'LOSS',
-    pnl: -15.00,
-    amount: 15.00,
-    latencyMs: 33,
-    galeStep: 1,
-    maxGale: 2,
-    galeMultiplier: 2.0,
-    timestamp: '15:02:30',
-    priority: 'Medium',
-    progressStep: 4,
-    totalSteps: 4,
-    commentsCount: 1,
-    attachmentsCount: 0,
-    rawText: 'PUT AUDCAD 15 M1 GALE 1',
-  },
-  {
-    id: 'SIG-10952',
-    source: 'telegram',
-    senderName: 'VIP Scalpers Club',
-    symbol: 'ETHUSDT',
-    action: 'BUY',
-    entryPrice: 3420.00,
-    currentPrice: 3458.00,
-    durationSeconds: 300,
-    targetBroker: 'MetaTrader 5',
-    brokerAccount: '90508108',
-    templateId: 281,
-    templateName: 'Template #281 (Crypto MT5 Alpha)',
-    templateSyntax: '$(symbol) $(action) $(entry_price)',
-    stage: 'settled',
-    status: 'WIN',
-    pnl: 114.00,
-    amount: 50.00,
-    latencyMs: 25,
-    galeStep: 0,
-    maxGale: 1,
-    galeMultiplier: 2.0,
-    timestamp: '14:58:10',
-    priority: 'High',
-    progressStep: 4,
-    totalSteps: 4,
-    commentsCount: 8,
-    attachmentsCount: 2,
-    rawText: 'ETHUSDT BUY 3420.00',
-  },
-];
-
 export const LiveOperationsPipeline: React.FC = () => {
-  const [operations, setOperations] = useState<LiveOperationItem[]>(SEED_OPERATIONS);
+  const [operations, setOperations] = useState<LiveOperationItem[]>([]);
   const [viewMode, setViewMode] = useState<'board' | 'spreadsheet' | 'timeline' | 'calendar'>('board');
   const [isPaused, setIsPaused] = useState(false);
   const [selectedBrokerFilter, setSelectedBrokerFilter] = useState<string>('ALL');
@@ -432,12 +124,13 @@ export const LiveOperationsPipeline: React.FC = () => {
 
     async function loadBackendData() {
       try {
-        const [tplRes, cfgRes, lnkRes, accRes, sigRes] = await Promise.allSettled([
+        const [tplRes, cfgRes, lnkRes, accRes, sigRes, ordRes] = await Promise.allSettled([
           getTemplates({ limit: 100 }),
           getTemplateConfigsList(),
           getTemplateBrokersLinks(),
           getAccounts(),
-          getSignalsHistory(),
+          getSignalsHistory({ limit: 50 }),
+          getOrdersHistory(),
         ]);
 
         if (!mounted) return;
@@ -455,49 +148,350 @@ export const LiveOperationsPipeline: React.FC = () => {
           setAccounts(accRes.value);
         }
 
-        // Merge any live backend signals into incoming queue if not already present
-        if (sigRes.status === 'fulfilled' && Array.isArray(sigRes.value)) {
-          const freshBackendSignals = sigRes.value.slice(0, 10);
-          setOperations((prev) => {
-            const existingIds = new Set(prev.map((o) => o.id));
-            const newMapped: LiveOperationItem[] = [];
+        // Intelligent Template & Metadata Resolver for Real Ingested Signals
+        const resolveSignalTemplate = (
+          sig: any,
+          rawJson: any,
+          rawText: string,
+          allTemplates: any[],
+          allConfigs: any[]
+        ): { templateId: number; templateName: string; templateSyntax: string; targetBroker: string } => {
+          // 1. Explicit ID in signal record or raw_data
+          const explicitId = sig.template_id || rawJson?.template_id;
+          if (explicitId) {
+            const matched = allTemplates.find((t) => t.id === Number(explicitId));
+            if (matched) {
+              return {
+                templateId: matched.id,
+                templateName: matched.name,
+                templateSyntax: matched.pattern_syntax || matched.pattern || '$(action) $(symbol)',
+                targetBroker: matched.target_broker === 'mt5' ? 'MetaTrader 5' : 'Pocket Option',
+              };
+            }
+          }
 
-            for (const sig of freshBackendSignals) {
-              const sigId = `SIG-${sig.id}`;
-              if (!existingIds.has(sigId)) {
-                // Find matching broker & template link
-                const targetBrokerName = sig.target_broker || (sig.market_type === 'FOREX' ? 'MetaTrader 5' : 'Pocket Option');
-                newMapped.push({
-                  id: sigId,
-                  source: sig.source?.includes('TELEGRAM') ? 'telegram' : 'webhook',
-                  senderName: sig.source?.split(':')[1] || 'Incoming Channel',
-                  symbol: sig.symbol || 'EURUSD',
-                  action: sig.action || 'BUY',
-                  entryPrice: sig.entry_price || 1.08500,
-                  currentPrice: sig.entry_price || 1.08500,
-                  durationSeconds: sig.duration_seconds || 60,
-                  targetBroker: targetBrokerName,
-                  brokerAccount: targetBrokerName === 'MetaTrader 5' ? '90508108' : 'pocketoption test',
-                  templateName: 'Extracted Pattern Match',
-                  stage: 'incoming',
-                  rawText: `${sig.action} ${sig.symbol} [From ${sig.source}]`,
-                  timestamp: new Date(sig.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-                  priority: 'Medium',
-                  progressStep: 1,
-                  totalSteps: 4,
-                  commentsCount: 0,
-                  attachmentsCount: 0,
-                  amount: 20,
-                  galeStep: sig.gale_steps || 0,
-                  maxGale: 2,
-                  galeMultiplier: sig.gale_multiplier || 2.0,
-                });
+          // 2. Channel Title / Sender matching
+          const chatTitle: string = (rawJson?.metadata?.chat_title || '').trim();
+          const senderUsername: string = (rawJson?.sender_username || '').trim();
+          const senderText = `${chatTitle} ${senderUsername} ${sig.source || ''}`.toLowerCase();
+
+          // Search in loaded templates
+          for (const t of allTemplates) {
+            if (t.sender_name && senderText.includes(t.sender_name.toLowerCase())) {
+              return {
+                templateId: t.id,
+                templateName: `${t.name}${t.sender_name ? ` (${t.sender_name})` : ''}`,
+                templateSyntax: t.pattern_syntax || t.pattern || '$(action) $(symbol)',
+                targetBroker: t.template_type === 'market' ? 'MetaTrader 5' : 'Pocket Option',
+              };
+            }
+          }
+
+          // Known channel mappings
+          if (senderText.includes('quotex free signals') || senderUsername === 'quotexbinarioptions') {
+            const t = allTemplates.find((item) => item.id === 297) || allTemplates.find((item) => item.id === 227);
+            return {
+              templateId: 297,
+              templateName: t?.name || 'Quotex FREE signals M5 (Template #297)',
+              templateSyntax: t?.pattern_syntax || '📊 Currency: $(symbol)\n⏳ EXPIRATION: $(period)\n⏱️ ENTRY: $(entry_time)',
+              targetBroker: 'Quotex',
+            };
+          }
+          if (senderText.includes('señales gratis quotex') || senderUsername === 'quotexopcionesbinarias') {
+            const t = allTemplates.find((item) => item.id === 296);
+            return {
+              templateId: 296,
+              templateName: t?.name || 'Señales GRATIS Quotex (Template #296)',
+              templateSyntax: t?.pattern_syntax || '📊 Divisa: $(symbol)\n⏳ EXPIRACIÓN: $(period)\n⏱️ ENTRADA: $(entry_time)',
+              targetBroker: 'Quotex',
+            };
+          }
+          if (senderText.includes('favindicators') || senderText.includes('alex inversiones') || senderText.includes('estrategia 8')) {
+            const t = allTemplates.find((item) => item.id === 294) || allTemplates.find((item) => item.id === 266);
+            return {
+              templateId: 294,
+              templateName: t?.name || 'Alex Inversiones - Estrategia 8 Bollinger (Template #294)',
+              templateSyntax: t?.pattern_syntax || '📊 [ESTRATEGIA 8]\n🪙 $(symbol)\n🔴 $(action)\n⏳ $(period_digit)$(period_name)',
+              targetBroker: 'Pocket Option',
+            };
+          }
+          if (senderText.includes('mariah trader')) {
+            const t = allTemplates.find((item) => item.id === 289) || allTemplates.find((item) => item.id === 290);
+            return {
+              templateId: 289,
+              templateName: t?.name || 'Mariah Trader Copy (Template #289)',
+              templateSyntax: t?.pattern_syntax || '💳 $(symbol)\n🔥 $(period)\n⏳ $(entry_time)\n🔼 $(action)',
+              targetBroker: 'Quotex',
+            };
+          }
+          if (senderText.includes('alejandro fintch') || senderUsername.includes('alejandro')) {
+            const t = allTemplates.find((item) => item.id === 287) || allTemplates.find((item) => item.id === 288);
+            return {
+              templateId: 287,
+              templateName: t?.name || 'Alejandro Fintch Señales (Template #287)',
+              templateSyntax: t?.pattern_syntax || '🚥 SEÑALE LIBRE 🚥\n• $(symbol) - $(action)',
+              targetBroker: 'Pocket Option',
+            };
+          }
+          if (senderText.includes('guilherme trader') || senderText.includes('guilherme')) {
+            const t = allTemplates.find((item) => item.id === 291);
+            return {
+              templateId: 291,
+              templateName: t?.name || 'Guilherme Trader Sinais (Template #291)',
+              templateSyntax: t?.pattern_syntax || '✅ ENTRY CONFIRMED ✅\n🌎 coin: $(symbol) $(otc)',
+              targetBroker: 'Quotex',
+            };
+          }
+          if (senderText.includes('scalping robot') || senderUsername === 'scalpingrobotalert') {
+            const t = allTemplates.find((item) => item.id === 282);
+            return {
+              templateId: 282,
+              templateName: t?.name || 'Scalping ROBOT 🤖 (Template #282)',
+              templateSyntax: t?.pattern_syntax || '🪙 $(symbol)\n🔴 $(action)\n⏳ $(period_digit)$(period_name)',
+              targetBroker: 'Pocket Option',
+            };
+          }
+          if (senderText.includes('gold') || senderText.includes('xauusd')) {
+            const t = allTemplates.find((item) => item.id === 281) || allTemplates.find((item) => item.id === 283);
+            return {
+              templateId: 281,
+              templateName: t?.name || 'XAUUSD Gold Signals (Template #281)',
+              templateSyntax: t?.pattern_syntax || '#$(symbol) INSTANT $(action)\nENTRY: $(entry_price)',
+              targetBroker: 'MetaTrader 5',
+            };
+          }
+          if (senderText.includes('taxa') || senderUsername === 'taxassingale') {
+            const t = allTemplates.find((item) => item.id === 280);
+            return {
+              templateId: 280,
+              templateName: t?.name || 'Señales TAXA Sin Gale (Template #280)',
+              templateSyntax: t?.pattern_syntax || '📊 SEÑAL GRATIS 📊\n• Punto de entrada: $(symbol)',
+              targetBroker: 'Quotex',
+            };
+          }
+          if (senderText.includes('zorro trader') || senderUsername === 'zorro_trader') {
+            const t = allTemplates.find((item) => item.id === 279);
+            return {
+              templateId: 279,
+              templateName: t?.name || 'Zorro Trader Binarias (Template #279)',
+              templateSyntax: t?.pattern_syntax || '💎 SEÑALES EN VIVO - OTC 💎\n• $(symbol)',
+              targetBroker: 'Pocket Option',
+            };
+          }
+          if (senderText.includes('elite')) {
+            const t = allTemplates.find((item) => item.id === 267);
+            return {
+              templateId: 267,
+              templateName: t?.name || 'Elite Equipo de Traders (Template #267)',
+              templateSyntax: t?.pattern_syntax || '🛰 POCKET OPTION M1\n💵 $(symbol)',
+              targetBroker: 'Pocket Option',
+            };
+          }
+          if (senderText.includes('forex factory') || senderText.includes('forex treding')) {
+            const t = allTemplates.find((item) => item.id === 275) || allTemplates.find((item) => item.id === 252);
+            return {
+              templateId: 275,
+              templateName: t?.name || 'Forex Factory Trading (Template #275)',
+              templateSyntax: t?.pattern_syntax || '$(symbol) $(action)\nENTRY $(entry_range)\nSL $(stoploss)\nTP $(profit_price)',
+              targetBroker: 'MetaTrader 5',
+            };
+          }
+
+          // 3. Match by Symbol & Market Type
+          const sym = (sig.symbol || '').toUpperCase();
+          if (sym.includes('XAU') || sym.includes('GOLD')) {
+            return {
+              templateId: 283,
+              templateName: 'Gold Trend Breakout (Template #283)',
+              templateSyntax: '#$(symbol) $(action)\nRange: $(entry_price)\nTP: $(profit_price)\nSL: $(stoploss)',
+              targetBroker: 'MetaTrader 5',
+            };
+          }
+          if (sym.includes('BTC') || sym.includes('ETH') || sym.includes('AVAX') || sym.includes('SOL')) {
+            return {
+              templateId: 4,
+              templateName: 'Crypto & Futures Indicator (Template #4)',
+              templateSyntax: '📊 [CRYPTO STRATEGY]\n🪙 $(symbol)\n$(action)\n⏳ $(period)',
+              targetBroker: 'MetaTrader 5',
+            };
+          }
+          if (sym.includes('OTC') || sig.market_type === 'BINARY' || sig.market_type === 'BINARY_OPTIONS') {
+            return {
+              templateId: 3,
+              templateName: 'Binary Expiration Signal (Template #3)',
+              templateSyntax: '✅ ENTRY CONFIRMED ✅\n🌎 COIN: $(symbol)\n⏳ EXPIRATION: $(period)\n📊 DIRECTION: $(action)',
+              targetBroker: 'Pocket Option',
+            };
+          }
+
+          // 4. Fallback Standard Forex
+          return {
+            templateId: 1,
+            templateName: 'Standard Forex Signal (Template #1)',
+            templateSyntax: '$(symbol) $(action) $(entry_price)\nTP $(profit_price)\nSL $(stoploss)',
+            targetBroker: 'MetaTrader 5',
+          };
+        };
+
+        // Map real orders executed from quant database
+        const mappedOrders: LiveOperationItem[] = [];
+        if (ordRes.status === 'fulfilled' && Array.isArray(ordRes.value)) {
+          for (const ord of ordRes.value) {
+            const isFilled = ord.status === 'FILLED';
+            const isPending = ord.status === 'PENDING';
+            const isSubmitted = ord.status === 'SUBMITTED';
+            const isSettled = ['CLOSED', 'WON', 'LOST', 'REJECTED', 'FAILED'].includes(ord.status);
+
+            let stage: 'incoming' | 'parsed' | 'active' | 'settled' = 'settled';
+            if (isPending) stage = 'incoming';
+            else if (isSubmitted) stage = 'parsed';
+            else if (isFilled) stage = 'active';
+            else if (isSettled) stage = 'settled';
+
+            let status: 'WIN' | 'LOSS' | 'PENDING' = 'PENDING';
+            if (ord.status === 'WON' || (ord.profit_loss != null && ord.profit_loss > 0)) status = 'WIN';
+            else if (ord.status === 'LOST' || (ord.profit_loss != null && ord.profit_loss < 0)) status = 'LOSS';
+
+            const brokerName =
+              ord.broker === 'mt5'
+                ? 'MetaTrader 5'
+                : ord.broker === 'pocketoption'
+                ? 'Pocket Option'
+                : ord.broker === 'quotex'
+                ? 'Quotex'
+                : ord.broker || 'MetaTrader 5';
+
+            const resolvedTpl = resolveSignalTemplate(ord, null, ord.symbol || '', tplRes.status === 'fulfilled' ? tplRes.value : [], []);
+
+            mappedOrders.push({
+              id: `ORD-${ord.id}`,
+              source: ord.sender_id || 'system',
+              senderName: ord.sender_id || `${brokerName} Execution`,
+              symbol: ord.symbol || 'EURUSD',
+              action: ((ord.action || 'BUY').toUpperCase() as any),
+              entryPrice: ord.entry_price || 0,
+              currentPrice: ord.close_price || ord.entry_price || 0,
+              durationSeconds: ord.duration_seconds || 60,
+              remainingSeconds: isFilled ? ord.duration_seconds || 60 : 0,
+              targetBroker: brokerName,
+              brokerAccount: ord.account_id ? String(ord.account_id) : 'Default',
+              templateId: ord.template_id || resolvedTpl.templateId,
+              templateName: ord.template_id ? `Template #${ord.template_id}` : resolvedTpl.templateName,
+              templateSyntax: resolvedTpl.templateSyntax,
+              stage,
+              status,
+              pnl: ord.profit_loss ?? 0,
+              amount: ord.amount || ord.executed_amount || 25,
+              galeStep: ord.gale_step || 0,
+              maxGale: 2,
+              galeMultiplier: 2.0,
+              rawText: `Order #${ord.id}: ${ord.action} ${ord.symbol} | Broker: ${brokerName}`,
+              timestamp: new Date(ord.created_at || Date.now()).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+              }),
+              priority: 'High',
+              progressStep: stage === 'incoming' ? 1 : stage === 'parsed' ? 2 : stage === 'active' ? 3 : 4,
+              totalSteps: 4,
+              commentsCount: 0,
+              attachmentsCount: 0,
+            });
+          }
+        }
+
+        // Map real incoming signals from Telegram / Webhooks
+        const mappedSignals: LiveOperationItem[] = [];
+        if (sigRes.status === 'fulfilled' && Array.isArray(sigRes.value)) {
+          const linkedSignalIds = new Set(
+            (ordRes.status === 'fulfilled' && Array.isArray(ordRes.value) ? ordRes.value : [])
+              .filter((o: any) => o.signal_id)
+              .map((o: any) => o.signal_id)
+          );
+
+          const loadedTpls = tplRes.status === 'fulfilled' && Array.isArray(tplRes.value) ? tplRes.value : [];
+          const loadedCfgs = cfgRes.status === 'fulfilled' && Array.isArray(cfgRes.value) ? cfgRes.value : [];
+
+          for (const sig of sigRes.value) {
+            if (linkedSignalIds.has(sig.id)) continue;
+
+            let stage: 'incoming' | 'parsed' | 'active' | 'settled' = 'incoming';
+            if (sig.status === 'RECEIVED') stage = 'incoming';
+            else if (sig.status === 'PARSED' || sig.status === 'ROUTED') stage = 'parsed';
+            else if (sig.status === 'EXECUTING' || sig.status === 'ACTIVE') stage = 'active';
+            else if (['EXECUTED', 'SETTLED', 'REJECTED', 'EXPIRED'].includes(sig.status)) stage = 'settled';
+
+            let status: 'WIN' | 'LOSS' | 'PENDING' = 'PENDING';
+            if (sig.status === 'EXECUTED') status = 'WIN';
+            else if (sig.status === 'REJECTED') status = 'LOSS';
+
+            // Parse raw JSON if available to get actual raw message text, sender channel title, etc.
+            let rawJson: any = null;
+            if (sig.raw_data) {
+              try {
+                rawJson = typeof sig.raw_data === 'string' ? JSON.parse(sig.raw_data) : sig.raw_data;
+              } catch (_) {}
+            }
+
+            const rawMessageText = rawJson?.raw_text || `${sig.action} ${sig.symbol} [From ${sig.source || 'Engine'}]`;
+            const senderChannelTitle = rawJson?.metadata?.chat_title || rawJson?.sender_username || sig.source?.split(':')[1] || sig.source || 'Telegram Ingest';
+
+            // Resolve real dynamic template
+            const resolvedTpl = resolveSignalTemplate(sig, rawJson, rawMessageText, loadedTpls, loadedCfgs);
+
+            const targetBrokerName = sig.target_broker || resolvedTpl.targetBroker || (sig.market_type === 'FOREX' ? 'MetaTrader 5' : 'Pocket Option');
+
+            // Format clean symbol
+            let displaySymbol = sig.symbol || 'EURUSD';
+            if (displaySymbol === 'UNKNOWN' || displaySymbol.length > 10) {
+              const otcMatch = rawMessageText.match(/\b([A-Z]{6}(?:[-_]OTC)?|[A-Z]{3,5}\/[A-Z]{3,5})\b/i);
+              if (otcMatch) {
+                displaySymbol = otcMatch[1].toUpperCase();
               }
             }
 
-            return newMapped.length > 0 ? [...newMapped, ...prev] : prev;
-          });
+            mappedSignals.push({
+              id: `SIG-${sig.id}`,
+              source: sig.source?.includes('TELEGRAM') ? 'telegram' : 'webhook',
+              senderName: senderChannelTitle,
+              symbol: displaySymbol,
+              action: ((sig.action || 'BUY').toUpperCase() as any),
+              entryPrice: sig.entry_price || 0,
+              currentPrice: sig.entry_price || 0,
+              durationSeconds: sig.duration_seconds || 60,
+              remainingSeconds: stage === 'active' ? sig.duration_seconds || 60 : 0,
+              targetBroker: targetBrokerName,
+              brokerAccount: targetBrokerName === 'MetaTrader 5' ? '90508108' : targetBrokerName === 'Quotex' ? 'quotex-live' : 'pocketoption test',
+              templateId: resolvedTpl.templateId,
+              templateName: resolvedTpl.templateName,
+              templateSyntax: resolvedTpl.templateSyntax,
+              stage,
+              status,
+              amount: 20,
+              pnl: 0,
+              galeStep: sig.gale_steps || 0,
+              maxGale: 2,
+              galeMultiplier: sig.gale_multiplier || 2.0,
+              rawText: rawMessageText,
+              timestamp: new Date(sig.created_at || Date.now()).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+              }),
+              priority: 'Medium',
+              progressStep: stage === 'incoming' ? 1 : stage === 'parsed' ? 2 : stage === 'active' ? 3 : 4,
+              totalSteps: 4,
+              commentsCount: 0,
+              attachmentsCount: 0,
+            });
+          }
         }
+
+        // Keep any manually triggered operations that haven't settled yet, and merge with real data
+        setOperations((prev) => {
+          const manualActive = prev.filter((o) => o.id.startsWith('OP-') && o.stage === 'active');
+          return [...manualActive, ...mappedOrders, ...mappedSignals];
+        });
 
         setLastSyncTime(new Date().toLocaleTimeString());
       } catch (err) {
@@ -506,7 +500,7 @@ export const LiveOperationsPipeline: React.FC = () => {
     }
 
     loadBackendData();
-    // Poll backend every 6 seconds for new Telegram signals
+    // Poll backend every 6 seconds for new real-time signals and executions
     const pollInterval = setInterval(() => {
       if (!isPaused) {
         loadBackendData();
@@ -519,13 +513,16 @@ export const LiveOperationsPipeline: React.FC = () => {
     };
   }, [isPaused]);
 
-  // 2. Real-Time Tick Loop: Decrement timers, simulate micro-price ticks, and auto-settle expired trades
+  // 2. Real-Time Tick Loop: Decrement timers for real active trades, and auto-settle expired trades
   useEffect(() => {
     if (isPaused) return;
 
     const timer = setInterval(() => {
-      setOperations((prev) =>
-        prev.map((op) => {
+      setOperations((prev) => {
+        const hasActive = prev.some((o) => o.stage === 'active');
+        if (!hasActive) return prev;
+
+        return prev.map((op) => {
           if (op.stage !== 'active') return op;
 
           const rem = op.remainingSeconds !== undefined ? op.remainingSeconds - 1 : undefined;
@@ -565,8 +562,8 @@ export const LiveOperationsPipeline: React.FC = () => {
             currentPrice: newCurrentPrice,
             pnl: floatingPnl,
           };
-        })
-      );
+        });
+      });
     }, 1000);
 
     return () => clearInterval(timer);
@@ -1079,6 +1076,13 @@ export const LiveOperationsPipeline: React.FC = () => {
             </div>
 
             <div className="space-y-3">
+              {incomingOps.length === 0 && (
+                <div className="p-8 text-center bg-white/60 dark:bg-slate-900/60 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 space-y-2">
+                  <Clock className="w-8 h-8 text-slate-400 mx-auto" />
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-300">No hay señales entrantes pendientes</p>
+                  <p className="text-[11px] text-slate-400">Esperando nuevas señales desde Telegram o Webhooks.</p>
+                </div>
+              )}
               {incomingOps.map((op) => (
                 <div
                   key={op.id}
@@ -1106,7 +1110,12 @@ export const LiveOperationsPipeline: React.FC = () => {
                         {op.action}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">{op.senderName}</p>
+                    <div className="flex items-center justify-between text-[11px] gap-1.5">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate font-medium">{op.senderName}</p>
+                      <span className="font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/70 border border-indigo-200/50 dark:border-indigo-800/60 px-2 py-0.5 rounded-md text-[10px] shrink-0 font-mono truncate max-w-[140px]" title={op.templateName}>
+                        {op.templateName}
+                      </span>
+                    </div>
                   </div>
 
                   <div className="p-2 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-100 dark:border-slate-800 font-mono text-[11px] text-slate-700 dark:text-slate-300 break-all">
@@ -1115,7 +1124,9 @@ export const LiveOperationsPipeline: React.FC = () => {
 
                   {/* Footer metadata */}
                   <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400">
-                    <span className="font-semibold text-slate-600 dark:text-slate-300">{op.targetBroker}</span>
+                    <span className="font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-1">
+                      <Building2 size={11} className="text-slate-400" /> {op.targetBroker}
+                    </span>
                     <span className="font-mono text-[10px] bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
                       {op.id}
                     </span>
@@ -1138,6 +1149,13 @@ export const LiveOperationsPipeline: React.FC = () => {
             </div>
 
             <div className="space-y-3">
+              {parsedOps.length === 0 && (
+                <div className="p-8 text-center bg-white/60 dark:bg-slate-900/60 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 space-y-2">
+                  <FileCode className="w-8 h-8 text-slate-400 mx-auto" />
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-300">No hay operaciones en enrutamiento</p>
+                  <p className="text-[11px] text-slate-400">Las señales validadas por los templates aparecerán aquí.</p>
+                </div>
+              )}
               {parsedOps.map((op) => (
                 <div
                   key={op.id}
@@ -1351,6 +1369,13 @@ export const LiveOperationsPipeline: React.FC = () => {
             </div>
 
             <div className="space-y-3">
+              {settledOps.length === 0 && (
+                <div className="p-8 text-center bg-white/60 dark:bg-slate-900/60 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 space-y-2">
+                  <CheckCircle2 className="w-8 h-8 text-slate-400 mx-auto" />
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-300">No hay operaciones finalizadas</p>
+                  <p className="text-[11px] text-slate-400">Las operaciones concluidas y auditadas se listarán aquí.</p>
+                </div>
+              )}
               {settledOps.map((op) => (
                 <div
                   key={op.id}
